@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blog Creator</title>
+    <style>
+        /* CSS styles for the page layout */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .dropzone {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .content {
+            margin-top: 20px;
+        }
+
+        .content-item {
+            margin-bottom: 20px;
+        }
+
+        .content-item img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .content-item video {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+    <script>
+        // JavaScript code for handling drag and drop events
+        function handleDrop(event) {
+            event.preventDefault();
+
+            // Get the dropped file(s)
+            var files = event.dataTransfer.files;
+
+            // Handle each file
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+
+                // Create a new content item
+                var contentItem = document.createElement('div');
+                contentItem.className = 'content-item';
+
+                // Handle the file based on its type
+                if (file.type.startsWith('image/')) {
+                    // It's an image file
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        var img = document.createElement('img');
+                        img.src = e.target.result;
+                        contentItem.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                } else if (file.type.startsWith('video/')) {
+                    // It's a video file
+                    var video = document.createElement('video');
+                    video.src = URL.createObjectURL(file);
+                    video.controls = true;
+                    contentItem.appendChild(video);
+                } else {
+                    // It's some other file
+                    var p = document.createElement('p');
+                    p.textContent = file.name;
+                    contentItem.appendChild(p);
+                }
+
+                // Append the content item to the content container
+                document.getElementById('contentContainer').appendChild(contentItem);
+            }
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+        }
+    </script>
+</head>
+<body>
+    <h1>Create Your Blog</h1>
+    <div id="dropzone" class="dropzone" ondrop="handleDrop(event)" ondragover="handleDragOver(event)">
+        <p>Drag and drop text, images, videos, or other files here to add them to your blog.</p>
+    </div>
+    <div id="contentContainer" class="content"></div>
+</body>
+</html>
